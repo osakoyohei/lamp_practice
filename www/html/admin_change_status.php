@@ -18,6 +18,12 @@ if(is_admin($user) === false){
   redirect_to(LOGIN_URL);
 }
 
+$token = get_post('csrf_token');
+if (is_valid_csrf_token($token) === false) {
+  print '不正なリクエストです';
+  exit;
+}
+
 $item_id = get_post('item_id');
 $changes_to = get_post('changes_to');
 
