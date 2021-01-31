@@ -138,7 +138,7 @@ function delete_user_carts($db, $user_id){
       user_id = ?
   ";
 
-  execute_query($db, $sql, [$user_id]);
+  return execute_query($db, $sql, [$user_id]);
 }
 
 //合計金額($total_price)関数
@@ -183,7 +183,7 @@ $sql = "
       VALUES(?)
     ";
     
-    execute_query($db, $sql, [$user_id]);
+    return execute_query($db, $sql, [$user_id]);
     
 }
 
