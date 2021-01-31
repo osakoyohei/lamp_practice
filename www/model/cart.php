@@ -120,11 +120,13 @@ function purchase_carts($db, $carts){
         $cart['item_id'], 
         $cart['stock'] - $cart['amount']
       ) === false){
-      set_error($cart['name'] . 'の購入に失敗しました。');
+        return false;
     }
   }
   
-  delete_user_carts($db, $carts[0]['user_id']);
+  if(delete_user_carts($db, $carts[0]['user_id']) === false) {
+    return false;
+  }
 }
 
 //カート商品を削除する関数
@@ -168,3 +170,57 @@ function validate_cart_purchase($carts){
   return true;
 }
 
+
+//課題2・追加テーブルへのデータ保存
+
+//購入履歴登録の関数
+function insert_orders($db, $user_id){
+$sql = "
+    INSERT INTO
+      orders(
+        user_id
+      )
+      VALUES(?)
+    ";
+    
+    execute_query($db, $sql, [$user_id]);
+    
+}
+
+//購入明細登録の関数
+function insert_order_details($db, $name, $price, $amount, $id){
+  $sql = "
+    INSERT INTO
+      order_details(
+        item_name,
+        price,
+        amount,
+        order_id
+      )
+        VALUES(?, ?, ?, ?)
+      ";
+
+      return execute_query($db, $sql, [$name, $price, $amount, $id]);
+}
+
+//購入履歴、購入明細登録の関数
+function purchase_history($db, $carts){
+  if (insert_orders($db, $carts[0]['user_id']) === false) {
+    return false;
+  }
+  
+  $id = $db->lastInsertId();
+
+  foreach($carts as $cart){
+    if(insert_order_details(
+      $db,
+      $cart['name'],
+      $cart['price'],
+      $cart['amount'],
+      $id
+    ) === false){
+      return false;
+    }
+  }
+  return true;
+}
