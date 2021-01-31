@@ -22,10 +22,18 @@ if (is_valid_csrf_token($token) === false) {
   exit;
 }
 
-if(purchase_carts($db, $carts) === false){
+$db->beginTransaction();
+if(purchase_history($db, $carts) === false){
   set_error('商品が購入できませんでした。');
+}
+if(purchase_carts($db, $carts) === false){
+  set_error('商品が購入できませんでした。');  
+}
+if(has_error()){
+  $db->rollback();
   redirect_to(CART_URL);
-} 
+}
+$db->commit();
 
 $total_price = sum_carts($carts);
 
