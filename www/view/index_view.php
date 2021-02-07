@@ -11,7 +11,24 @@
   
 
   <div class="container">
+
+    <!--商品並び替え-->
+    <form action="index.php" method = "get">
+      <select name="sort">
+        <?php foreach($sorts as $key => $item) {?>
+          <?php if ($key === (int)$sort) { ?>
+            <option selected value="<?php print h($key); ?>"> <?php print h($item); ?></option>
+          <?php } else { ?>
+            <option value="<?php print h($key); ?>"> <?php print h($item); ?></option>
+          <?php } ?>
+        <?php } ?>
+      </select>
+      <input type="submit"　name="submit" value="並び替え">
+    </form>
+    <br>
+
     <h1>商品一覧</h1>
+
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
 
     <div class="card-deck">
@@ -31,6 +48,7 @@
                     <input type="hidden" name="csrf_token" value="<?php print $token ?>" >
                     <input type="submit" value="カートに追加" class="btn btn-primary btn-block">
                     <input type="hidden" name="item_id" value="<?php print h($item['item_id']); ?>">
+                    <input type="hidden" name="sort" value="<?php print h($sort) ?>" >
                   </form>
                 <?php } else { ?>
                   <p class="text-danger">現在売り切れです。</p>

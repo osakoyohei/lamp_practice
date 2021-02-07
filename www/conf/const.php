@@ -51,3 +51,7 @@ define('PERMITTED_IMAGE_TYPES', array(
   IMAGETYPE_JPEG => 'jpg',
   IMAGETYPE_PNG => 'png',
 ));
+
+define('ITEM_ORDER_NEW', '1');
+define('ITEM_ORDER_CHEAP', '2');
+define('ITEM_ORDER_EXPENSIVE', '3');
