@@ -22,10 +22,13 @@ if (is_valid_csrf_token($token) === false) {
 
 $item_id = get_post('item_id');
 
+$sort = get_post('sort');
+
+
 if(add_cart($db,$user['user_id'], $item_id)){
   set_message('カートに商品を追加しました。');
 } else {
   set_error('カートの更新に失敗しました。');
 }
 
-redirect_to(HOME_URL);
+redirect_to(HOME_URL. '?sort='. $sort);

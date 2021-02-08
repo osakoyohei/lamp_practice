@@ -4,7 +4,7 @@ require_once MODEL_PATH . 'db.php';
 
 // DB利用
 
-//item_idからitemsテーブルの情報を取得する関数
+//itemsテーブルの情報を取得する関数
 function get_item($db, $item_id){
   $sql = "
     SELECT
@@ -22,8 +22,7 @@ function get_item($db, $item_id){
 
   return fetch_query($db, $sql, [$item_id]);
 }
-
-//
+//商品一覧画面
 function get_items($db, $is_open = false){
   $sql = '
     SELECT
@@ -45,14 +44,105 @@ function get_items($db, $is_open = false){
   return fetch_all_query($db, $sql);
 }
 
+//商品一覧の新着順
+function get_new($db, $is_open = false){
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status,
+      created
+    FROM
+      items
+  ';
+  if($is_open === true){
+    $sql .= '
+      WHERE status = 1
+    ';
+    $sql .= '
+    ORDER BY
+      created desc
+    ';
+  }
+
+  return fetch_all_query($db, $sql);
+}
+
+//商品一覧の価格が安い順
+function get_cheap($db, $is_open = false){
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+    FROM
+      items
+  ';
+  if($is_open === true){
+    $sql .= '
+      WHERE status = 1
+    ';
+    $sql .= '
+    ORDER BY
+      price asc
+    ';
+  }
+
+  return fetch_all_query($db, $sql);
+}
+
+//商品一覧の価格が高い順
+function get_expensive($db, $is_open = false){
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+    FROM
+      items
+  ';
+  if($is_open === true){
+    $sql .= '
+      WHERE status = 1
+    ';
+    $sql .= '
+    ORDER BY
+      price desc
+    ';
+  }
+
+  return fetch_all_query($db, $sql);
+}
+
 //admin.php　status０の商品の背景色変更
 function get_all_items($db){
   return get_items($db);
 }
 
-//index.php status1の商品を公開
+//通常
 function get_open_items($db){
   return get_items($db, true);
+}
+//新着順
+function get_new_items($db){
+  return get_new($db, true);
+}
+//価格の安い順
+function get_cheap_items($db){
+  return get_cheap($db, true);
+}
+//価格の高い順
+function get_expensive_items($db){
+  return get_expensive($db, true);
 }
 
 //商品を追加関数
